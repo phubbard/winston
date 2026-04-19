@@ -44,11 +44,11 @@ class FeedItemsManager<S> {
         if !loadingMore, let currentTask, !currentTask.isCancelled {
             currentTask.cancel()
         }
-        
+
         let lastElementId = loadingMore ? self.lastElementId : nil
         let searchQuery = selectedFilter?.type == .custom ? selectedFilter?.text : searchQuery.debounced.isEmpty ? nil : searchQuery.debounced
         let filter = selectedFilter?.type != .custom ? selectedFilter?.text : nil
-        
+
         if let (fetchedEntities, after) = await fetchFn(lastElementId, sorting, searchQuery, filter), let fetchedEntities {
             
             if !loadingMore {

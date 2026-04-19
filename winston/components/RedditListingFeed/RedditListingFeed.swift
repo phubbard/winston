@@ -41,6 +41,7 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
     @FetchRequest private var filters: FetchedResults<CachedFilter>
     
     @State private var searchEnabled: Bool
+    @State private var initialLoadDone: Bool = false
     @SilentState private var fetchedFilters: Bool = false
     
     @State private var itemsManager: FeedItemsManager<S>
@@ -295,7 +296,18 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
                     }
                 }
             }
+            .onAppear {
+                // Use unstructured Task for initial load to avoid NavigationSplitView
+                // transition cancelling the structured .task's in-flight network request
+                guard itemsManager.displayMode == .loading else { return }
+                Task {
+                    await refetch()
+                    initialLoadDone = true
+                }
+            }
             .task(id: [itemsManager.searchQuery.debounced, itemsManager.selectedFilter?.text, itemsManager.sorting?.meta.apiValue]) {
+                // Only handle sort/search/filter changes, not the initial load
+                guard initialLoadDone else { return }
                 if itemsManager.displayMode != .loading { return }
                 await refetch()
             }
