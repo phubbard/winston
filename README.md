@@ -6,7 +6,15 @@
 ![GitHub issues](https://img.shields.io/github/issues-raw/phubbard/winston)
 ![GitHub release](https://img.shields.io/github/v/release/phubbard/winston)
 
-Winston is an elegant, open-source, native Reddit client for iOS. This is an actively maintained fork of the original [lo-cafe/winston](https://github.com/lo-cafe/winston).
+Winston is a privacy-focused, open-source Reddit client for iOS. No analytics, no tracking, no ads, no third-party data collection — your data stays on your device and the app communicates only with Reddit's API. This is an actively maintained fork of the original [lo-cafe/winston](https://github.com/lo-cafe/winston).
+
+## Privacy
+
+- **No analytics or tracking** — zero telemetry, no usage data collected
+- **No ads or ad networks** — no advertising SDKs of any kind
+- **No third-party data collection** — removed all upstream phone-home code (ThemeStore, WinstonAPI)
+- **Communicates only with Reddit** — the only network calls are to Reddit's OAuth and API endpoints
+- **Open source** — audit the code yourself
 
 ## Installing
 
@@ -29,6 +37,10 @@ Winston requires iOS 17+ and your own Reddit API credentials.
 - Updated branding, FAQ, and links for this fork
 - Replaced CI with simple build + release workflows
 - Fixed duplicate subreddits in the subs list
+- Removed ThemeStore and WinstonAPI third-party phone-home code
+- Added dark mode / light mode / system appearance setting
+- Fixed feed switching error when navigating between Home/Popular/All/Saved
+- Auto build numbers from git commit count
 
 ## Contributing
 
