@@ -46,10 +46,7 @@ struct AppearancePanel: View {
         .listSectionSpacing(15)
         
         Section {
-          HStack(spacing: 12){
-            ListBigBtn(icon: "paintbrush.fill", iconColor: Color.blue, label: "My Themes") { Nav.to(.setting(.themes)) }
-            ListBigBtn(icon: "basket.fill", iconColor: Color.orange, label: "Theme Store") { Nav.to(.setting(.themeStore)) }
-          }
+          ListBigBtn(icon: "paintbrush.fill", iconColor: Color.blue, label: "My Themes") { Nav.to(.setting(.themes)) }
         } footer: {
           if theme.id == "default" {
             Text("Please go into \"My Theme\" and create a new one if you want to edit it")

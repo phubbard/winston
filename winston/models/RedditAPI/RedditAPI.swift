@@ -15,7 +15,6 @@ import Combine
 @Observable
 class RedditAPI {
     static let shared = RedditAPI()
-    static let winstonAPIBase = "https://winston.lo.cafe/api"
     static let redditApiURLBase = "https://oauth.reddit.com"
     static let redditWWWApiURLBase = "https://www.reddit.com"
     static let appRedirectURI: String = "https://www.phfactor.net/winston/auth-success"

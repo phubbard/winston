@@ -14,7 +14,6 @@ struct Settings: View {
   @State var router: Router
   
   
-  @ObservedObject private var winstonAPI = WinstonAPI.shared
   @Environment(\.openURL) private var openURL
   //  @Default(.likedButNotSubbed) private var likedButNotSubbed
   @Environment(\.useTheme) private var selectedTheme

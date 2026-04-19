@@ -15,7 +15,6 @@ struct GeneralDefSettings: Equatable, Hashable, Codable, Defaults.Serializable {
   
   var redditCredentialSelectedID: UUID? = nil
   var onboardingState: OnboardingState = .unknown
-  var lastSeenAnnouncementTimeStamp: Int = 0
   var iCloudSyncUserDefaults = true
   var useAuth: Bool = false
   var showingUpsellDict: Dictionary<String, Bool> = .init()

@@ -21,8 +21,6 @@ struct Tabber: View {
     @Environment(\.setTabBarHeight) private var setTabBarHeight
     @Default(.AppearanceDefSettings) private var appearanceDefSettings
     
-    @State var sharedTheme: ThemeData? = nil
-    
     func meTabTap() {
         if nav.activeTab == .me {
             nav[.me].resetNavPath()
@@ -93,7 +91,6 @@ struct Tabber: View {
         }
         .overlay(TabBarOverlay(meTabTap: meTabTap), alignment: .bottom)
         .openFromWebListener()
-        .themeFetchingListener() // From WinstonAPI
         .newCredentialListener()
         .themeImportingListener() // From local file
         .globalLoaderProvider()

@@ -9,7 +9,6 @@ import SwiftUI
 import Defaults
 
 struct AppContent: View {
-    @StateObject private var themeStore = ThemeStoreAPI()
     @Environment(\.scenePhase) var scenePhase
     
     //  @Default(.ThemesDefSettings) private var themesDefSettings
@@ -37,7 +36,6 @@ struct AppContent: View {
         .tipJarModalProvider()
         .environment(\.tabBarHeight, tabBarHeight)
         .environment(\.setTabBarHeight, setTabBarHeight)
-        .environmentObject(themeStore)
         .environment(\.useTheme, InMemoryTheme.shared.currentTheme)
         .task {
             IAPManager.shared.startListeningForUpdates()

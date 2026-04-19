@@ -33,18 +33,14 @@ class Nav: Identifiable, Equatable {
   enum PresentingSheet: Codable, Hashable, Identifiable, Equatable {
     case onboarding
     case editingCredential(RedditCredential)
-    case announcement(Announcement)
     case editingTheme(WinstonTheme)
-    case sharedTheme(ThemeData)
-    
+
     var id: String {
       var newID: String = ""
       switch self {
-      case .announcement(let ann): newID = ann.id
       case .editingCredential(let cred): newID = cred.id.uuidString
       case .onboarding: newID = "onboarding"
       case .editingTheme(let theme): newID = theme.id
-      case .sharedTheme(let themeData): newID = themeData.id
       }
       return "\(newID)-presenting-sheet-Nav"
     }

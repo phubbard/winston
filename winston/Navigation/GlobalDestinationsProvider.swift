@@ -22,10 +22,8 @@ struct GlobalDestinationsProvider<C: View>: View {
           Group {
             switch data {
             case .editingTheme(let theme): ThemeEditPanel(theme: theme)
-            case .announcement(let announcement): AnnouncementSheet(announcement: announcement)
             case .editingCredential(let cred): CredentialEditStack(credential: cred).id("editing-credential-view-\(cred.id)")
             case .onboarding: Onboarding().interactiveDismissDisabled(true)
-            case .sharedTheme(let themeData): ThemeStoreDetailsView(themeData: themeData)
             }
           }
           .environment(\.tabBarHeight, tabBarHeight)
