@@ -46,7 +46,7 @@ struct Subreddits: View, Equatable {
   @Environment(\.useTheme) private var selectedTheme
   
   var sections: [String:[CachedSub]] {
-    return Dictionary(grouping: subreddits.filter({ $0.user_is_subscriber && !$0.user_has_favorited })) { sub in
+    return Dictionary(grouping: subreddits.filter({ $0.user_is_subscriber })) { sub in
       return String((sub.display_name ?? "a").first!.uppercased())
     }
   }
@@ -152,7 +152,7 @@ struct Subreddits: View, Equatable {
             if appearanceDefSettings.disableAlphabetLettersSectionsInSubsList {
               
               Section("Subs") {
-                let subs = Array(subreddits.filter({ $0.user_is_subscriber && !$0.user_has_favorited }).sorted(by: { x, y in (x.display_name?.lowercased() ?? "a") < (y.display_name?.lowercased() ?? "a") }).enumerated())
+                let subs = Array(subreddits.filter({ $0.user_is_subscriber }).sorted(by: { x, y in (x.display_name?.lowercased() ?? "a") < (y.display_name?.lowercased() ?? "a") }).enumerated())
                 ForEach(subs, id: \.self.element) { i, cachedSub in
                   let sub = Subreddit(data: SubredditData(entity: cachedSub))
                   SubItem(isActive: Router.NavDest.reddit(.subFeed(sub)) == firstDestination, sub: sub, cachedSub: cachedSub, action: selectSub)
