@@ -1,43 +1,44 @@
 ![Winston Logo](https://i.imgur.com/axc6Rq3.png)
 
-![Discord](https://img.shields.io/discord/1094807340903039048)
-![License](https://img.shields.io/github/license/lo-cafe/winston)
-[![Platform](http://img.shields.io/badge/platform-iOS/iPadOS/macOS-blue.svg)](https://developer.apple.com/iphone/index.action)
-![Release](https://img.shields.io/github/downloads/lo-cafe/winston/total)
-![GitHub issues](https://img.shields.io/github/issues-raw/lo-cafe/winston)
+[![Build](https://github.com/phubbard/winston/actions/workflows/build.yml/badge.svg)](https://github.com/phubbard/winston/actions/workflows/build.yml)
+![License](https://img.shields.io/github/license/phubbard/winston)
+[![Platform](http://img.shields.io/badge/platform-iOS/iPadOS-blue.svg)](https://developer.apple.com/iphone/index.action)
+![GitHub issues](https://img.shields.io/github/issues-raw/phubbard/winston)
+![GitHub release](https://img.shields.io/github/v/release/phubbard/winston)
 
-Step into Winston's embracing world! Winston is an elegant, open-source, native crafted Reddit client for iOS that pushes user experience to the next level.
+Winston is an elegant, open-source, native Reddit client for iOS. This is an actively maintained fork of the original [lo-cafe/winston](https://github.com/lo-cafe/winston).
 
-> [!IMPORTANT]
-> ⚠️ We're hard at work! Both Winston and this README are works in progress. Watch this space for updates!
+## Installing
 
+Winston requires iOS 17+ and your own Reddit API credentials.
 
-<a href="https://testflight.apple.com/join/3UF8bAUN"><img src="https://i.imgur.com/A5Kpowu.png" width="200"></a>
-<a href="https://www.shorturl.at/dAL15"><img src="https://i.imgur.com/46qhEAv.png" width="200"></a>
+1. Clone the repo and open `winston.xcodeproj` in Xcode
+2. Set your development team and bundle identifier in the project settings
+3. Build and run on your device
+4. Follow the in-app credential setup to connect your Reddit account
 
+## Changes from upstream
 
-## 🛠️ How to Install
+- Fixed broken tab bar (buttons not responding to taps)
+- Fixed scroll jumping when loading new content
+- Fixed post text truncation
+- Fixed startup blur race condition
+- Fixed cross-tab navigation (e.g. "Go to credentials settings")
+- Auto-select credentials after first setup
+- OAuth redirect via custom URL scheme (no dependency on winston.cafe)
+- Updated branding, FAQ, and links for this fork
+- Replaced CI with simple build + release workflows
+- Fixed duplicate subreddits in the subs list
 
-At the moment, Winston hasn't made its grand appearance on the App Store. But worry not! Here's how you can get your hands on Winston:
-*Please note, Winston's minimum version is now iOS 17.*
+## Contributing
 
-1. **TestFlight**: Take part in Winston's journey by joining our TestFlight [here](https://testflight.apple.com/join/3UF8bAUN). Be aware that this could be full or unavailable due to TestFlight's occasional downtimes.
+Pull requests welcome against `main`. Please open an issue first for larger changes.
 
-2. **Sideloading**: Employ [Sideloadly](https://sideloadly.io/) or a sideloading method of your preference to install the Winston IPA directly. Grab the IPA file from our [releases](https://github.com/lo-cafe/winston/releases/latest) page!
+## Links
 
-## 🎁 Make Winston Better (Contribution)
+- [Report a bug](https://github.com/phubbard/winston/issues)
+- [Original Winston by lo.cafe](https://github.com/lo-cafe/winston)
 
-We open our arms to all those who wish to make Winston even better. If you'd like to contribute, kindly create a pull request based on the ['alpha'](https://github.com/lo-cafe/winston/tree/alpha) branch for seamless integration. We eagerly look forward to your ideas and innovations!
+## License
 
-## 🔗 Handy Links
-
-- **Official sites**: Intrigued by our work? Explore some of our other creations at [lo.cafe](https://lo.cafe).
-- **Join the Club**: Connect with us, drop in your suggestions, or be part of our vibrant community on our [Discord](https://discord.gg/Jw3Syb3nrz) server.
-- Express your support by buying us a coffee at [Patreon](https://patreon.com/user?u=93745105) or [Ko-fi](https://ko-fi.com/locafe) ☕️❤️🐱
-
-> [!NOTE]
-> 🔔 Note: We no longer maintain a subreddit owing to irreconcilable policy disputes with Reddit.
- 
-## 🔓 License
-
-Winston is open-source, licensed under the GPL-3.0 license. Refer to the LICENSE file in the repository for more details.
+Winston is open-source, licensed under the GPL-3.0 license. See the LICENSE file for details.
