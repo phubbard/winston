@@ -51,8 +51,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sindresorhus/Defaults",
       "state" : {
-        "branch" : "main",
-        "revision" : "4c009d5c2496e7aa126e922c94dd3d6ae049efa2"
+        "revision" : "38925e3cfacf3fb89a81a35b1cd44fd5a5b7e0fa",
+        "version" : "8.2.0"
       }
     },
     {
@@ -141,8 +141,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/EmergeTools/Pow",
       "state" : {
-        "revision" : "f0d0f3e72d42beaf2b01f1cb798e1b55902814eb",
-        "version" : "1.0.4"
+        "revision" : "1b4b1dda28c50b95f0872927ee2226fe8b58950e",
+        "version" : "1.0.6"
       }
     },
     {

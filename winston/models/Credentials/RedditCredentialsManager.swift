@@ -17,8 +17,8 @@ class RedditCredentialsManager {
   static let shared = RedditCredentialsManager()
   static func getById(_ credID: UUID) -> RedditCredential? { RedditCredentialsManager.shared.credentials.first(where: { $0.id == credID } ) }
   static let keychainEntryDivider = "\\--(*.*)--/"
-  static let oldKeychainServiceString = "lo.cafe.winston.reddit-credentials"
-  static let keychainServiceString = "lo.cafe.winston.reddit-multi-credentials"
+  static let oldKeychainServiceString = "net.phfactor.winston.reddit-credentials"
+  static let keychainServiceString = "net.phfactor.winston.reddit-multi-credentials"
   static let keychain = Keychain(service: RedditCredentialsManager.keychainServiceString).synchronizable(Defaults[.BehaviorDefSettings].iCloudSyncCredentials)
   private(set) var credentials: [RedditCredential] = []
   var validCredentials: [RedditCredential] { credentials.filter { $0.validationStatus == .authorized } }

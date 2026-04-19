@@ -55,12 +55,17 @@ struct FullSwipeNavigationStack<C: View>: UIViewControllerRepresentable, Equatab
     if context.coordinator.prevActiveTab == activeTab { return }
     context.coordinator.prevActiveTab = activeTab
     
+    // Only remove gesture recognizers we previously added, not SwiftUI's internal ones
+    let prefix = "winston.swipeAnywhere."
     hostingController.view.gestureRecognizers?.forEach { gesture in
-      hostingController.view.removeGestureRecognizer(gesture)
+      if let name = gesture.name, name.hasPrefix(prefix) {
+        hostingController.view.removeGestureRecognizer(gesture)
+      }
     }
 
-    hostingController.view.addGestureRecognizer(Nav.shared.activeRouter.navController.tabBarGesture)
-    hostingController.view.addGestureRecognizer(UITapGestureRecognizer())
+    let tabGesture = Nav.shared.activeRouter.navController.tabBarGesture
+    tabGesture.name = "\(prefix)tabBar"
+    hostingController.view.addGestureRecognizer(tabGesture)
     hostingController.rootView = content
 
   }

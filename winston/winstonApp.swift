@@ -26,7 +26,7 @@ struct winstonApp: App {
            WhatsNewEnvironment(currentVersion: .current(), whatsNewCollection: getCurrentChangelog())
         )
         .task {
-          ImagePipeline.shared = ImagePipeline(configuration: .withDataCache(name: "lo.cafe.winston.datacache", sizeLimit: 1024 * 1024 * 300))
+          ImagePipeline.shared = ImagePipeline(configuration: .withDataCache(name: "net.phfactor.winston.datacache", sizeLimit: 1024 * 1024 * 300))
         }
     }
   }

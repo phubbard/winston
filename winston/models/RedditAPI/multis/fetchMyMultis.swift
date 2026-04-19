@@ -9,7 +9,7 @@ import Foundation
 import Defaults
 import Alamofire
 import SwiftUI
-import CoreData
+@preconcurrency import CoreData
 
 extension RedditAPI {
   func fetchMyMultis() async -> Bool {

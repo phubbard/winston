@@ -157,7 +157,7 @@ struct GeneralPanel: View {
     func clearCache() {
         do {
             // Attempt to flush the custom data cache
-            let dataCache = try DataCache(name: "lo.cafe.winston.datacache")
+            let dataCache = try DataCache(name: "net.phfactor.winston.datacache")
             try dataCache.flush()
             print("Custom DataCache flushed successfully.")
         } catch {

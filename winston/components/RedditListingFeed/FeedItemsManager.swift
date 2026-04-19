@@ -78,13 +78,11 @@ class FeedItemsManager<S> {
             
             
             DispatchQueue.main.async { [newEntities, newLoadedEntitiesIds] in
-                withAnimation {
-                    self.displayMode = fetchedEntities.count < self.chunkSize ? .endOfFeed : .items
-                    self.entities = newEntities
-                    //        self.lastElementId = fetchedEntities.count == 0 ? nil : fetchedEntities[fetchedEntities.count - 1].fullname
-                    self.lastElementId = after
-                    self.loadedEntitiesIds = newLoadedEntitiesIds
-                }
+                // Don't animate appending — it causes scroll position jumps
+                self.displayMode = fetchedEntities.count < self.chunkSize ? .endOfFeed : .items
+                self.entities = newEntities
+                self.lastElementId = after
+                self.loadedEntitiesIds = newLoadedEntitiesIds
             }
             
         } else {

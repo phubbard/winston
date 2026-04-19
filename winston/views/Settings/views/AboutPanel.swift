@@ -31,30 +31,12 @@ struct AboutPanel: View {
             }
           }
           
-          Text("Winston is developed by the lo.cafe team, a group of friends making amazing software together.")
-          
+          Text("Winston is an open-source Reddit client, originally created by the lo.cafe team. This fork is maintained by phubbard.")
+
           WListButton {
-            openURL(URL(string: "https://lo.cafe")!)
+            openURL(URL(string: "https://github.com/phubbard/winston")!)
           } label: {
-            Label("Visit lo.cafe Website", systemImage: "cup.and.saucer.fill").foregroundStyle(Color.accentColor)
-          }
-          
-          WListButton {
-            openURL(URL(string: "https://discord.gg/Jw3Syb3nrz")!)
-          } label: {
-            Label {
-              Text("Join the Discord Server")
-            } icon: {
-              Image(.discordLogo)
-                .resizable()
-                .scaledToFit()
-            }
-          }
-          
-          WListButton {
-            openURL(URL(string: "https://patreon.com/user?u=93745105")!)
-          } label: {
-            Label("Support our Work!", systemImage: "heart.fill").foregroundStyle(Color.accentColor)
+            Label("View on GitHub", systemImage: "arrow.branch").foregroundStyle(Color.accentColor)
           }
           
         }
@@ -62,9 +44,9 @@ struct AboutPanel: View {
         Section {
           Text("Winston is a free and open source software, therefore it isn't against Reddit's policies.")
           WListButton {
-            openURL(URL(string: "https://github.com/Kinark/winston")!)
+            openURL(URL(string: "https://github.com/lo-cafe/winston")!)
           } label: {
-            Label("Check out Winston's Source Code", systemImage: "arrow.branch")
+            Label("Original Winston Source Code", systemImage: "arrow.branch")
           }
         }
       }

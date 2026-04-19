@@ -70,6 +70,7 @@ struct AppContent: View {
                     // Not authing, active and blur visible = Need to auth
                     isAuthenticating = true
                     biometrics.authenticateUser { success in
+                        isAuthenticating = false
                         if success {
                             lockBlur = 0
                         }
@@ -79,10 +80,10 @@ struct AppContent: View {
                     // Auth enabled but not active = blur
                     lockBlur = 50
                 }
-                isAuthenticating = false
             } else {
                 // Auth not enabled = No blur
                 lockBlur = 0
+                isAuthenticating = false
             }
             
             switch newPhase {

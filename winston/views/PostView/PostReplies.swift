@@ -113,12 +113,12 @@ struct PostReplies: View {
           Spacer()
             .frame(height: 1)
             .listRowBackground(Color.clear)
-            .onChange(of: update) { _ in
+            .onChange(of: update) {
               Task(priority: .background) {
                 await asyncFetch(true)
               }
             }
-            .onChange(of: ignoreSpecificComment) { val in
+            .onChange(of: ignoreSpecificComment) { _, val in
               Task(priority: .background) {
                 await asyncFetch(post.data == nil, val)
                 globalLoaderDismiss()

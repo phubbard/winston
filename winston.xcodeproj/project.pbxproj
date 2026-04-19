@@ -39,7 +39,7 @@
 		659FDEA82A87798300103414 /* VoteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659FDEA72A87798300103414 /* VoteButton.swift */; };
 		65A5FFF22ACED3BF000D1ADA /* getPreviewImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A5FFF12ACED3BF000D1ADA /* getPreviewImages.swift */; };
 		65AA535D2A8BB27900275299 /* FAQPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65AA535C2A8BB27900275299 /* FAQPanel.swift */; };
-		65B0619B2AFE8A05008B7AF3 /* changelog.json in Sources */ = {isa = PBXBuildFile; fileRef = 65E45A6D2AFD3C1D007DBBFC /* changelog.json */; };
+
 		65C169EC2AFFA60B007764D5 /* isImageUrl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65C169EB2AFFA60B007764D5 /* isImageUrl.swift */; };
 		65C3A1C72B136430004609CA /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 65C3A1C52B136430004609CA /* InfoPlist.strings */; };
 		65CDA3622ACB0EB50001EC44 /* ZoomableImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65CDA3612ACB0EB50001EC44 /* ZoomableImageView.swift */; };
@@ -326,7 +326,7 @@
 		EC66A2A52BA00530004E20BB /* Pow in Frameworks */ = {isa = PBXBuildFile; productRef = EC66A2A42BA00530004E20BB /* Pow */; };
 		EC684C832AF1FD9E00BC2A84 /* ScrollSwipe_WIP.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC684C822AF1FD9E00BC2A84 /* ScrollSwipe_WIP.swift */; };
 		EC6CBE332A7D6BF80089EAA0 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = EC6CBE322A7D6BF80089EAA0 /* README.md */; };
-		EC6CBE352A7D6E760089EAA0 /* LICENSE.md in Sources */ = {isa = PBXBuildFile; fileRef = EC6CBE342A7D6E760089EAA0 /* LICENSE.md */; };
+		EC6CBE352A7D6E760089EAA0 /* LICENSE.md in Resources */ = {isa = PBXBuildFile; fileRef = EC6CBE342A7D6E760089EAA0 /* LICENSE.md */; };
 		EC7567042BB47DCB00CB67A3 /* supernova-appear.ahap in Resources */ = {isa = PBXBuildFile; fileRef = EC7567032BB47DCB00CB67A3 /* supernova-appear.ahap */; };
 		EC77B1832AA4021D00C482DF /* injectInTabDestinations.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC77B1822AA4021D00C482DF /* injectInTabDestinations.swift */; };
 		EC77EC0B2B2549AA0053B966 /* GlobalDestinationsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC77EC0A2B2549AA0053B966 /* GlobalDestinationsProvider.swift */; };
@@ -2764,6 +2764,7 @@
 				EC4792F52B468ADA00487AEE /* gear.json in Resources */,
 				EC4792EF2B4689D200487AEE /* user.json in Resources */,
 				65E45A6E2AFD3C1D007DBBFC /* changelog.json in Resources */,
+				EC6CBE352A7D6E760089EAA0 /* LICENSE.md in Resources */,
 				ECA3700B2B47D68900C73CB0 /* auth-ext.mov in Resources */,
 				EC6081382B43FAA8001A1077 /* thumbup.json in Resources */,
 				ECE5AE152B11FD0A00DA2020 /* Dust.sks in Resources */,
@@ -2844,7 +2845,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65B0619B2AFE8A05008B7AF3 /* changelog.json in Sources */,
 				EC593AF02A47ACB0002D6454 /* Tabber.swift in Sources */,
 				EC3AC9D42AACCBE40078EC78 /* LabeledTextField.swift in Sources */,
 				EC50B0E62A8460CD00AB8F72 /* replyModalPresenter.swift in Sources */,
@@ -3163,7 +3163,6 @@
 				EC6373592A791AB2000A03A3 /* Onboarding6Auth.swift in Sources */,
 				ECAEFF602A77A41D0052FCD3 /* stringFallback.swift in Sources */,
 				ECEFC2692A5DFA4B0003C6C4 /* formatBigNumber.swift in Sources */,
-				EC6CBE352A7D6E760089EAA0 /* LICENSE.md in Sources */,
 				ECFB019F2B0D08420083E4FC /* MixedContentLink.swift in Sources */,
 				EC4C7C9E2B2C54760007A4DA /* SubredditFeedDefSettings.swift in Sources */,
 				EC31881A2A92BA9500CB3738 /* fetchMultiPosts.swift in Sources */,
@@ -3501,8 +3500,8 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = winston/winston.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = Z2NNLU4F7U;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = NSR65JVW9F;
 				ENABLE_PREVIEWS = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3523,8 +3522,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.6;
-				PRODUCT_BUNDLE_IDENTIFIER = lo.cafe.winston;
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.phfactor.winston;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3545,8 +3544,8 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = winston/winston.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
-				DEVELOPMENT_TEAM = Z2NNLU4F7U;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = NSR65JVW9F;
 				ENABLE_PREVIEWS = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/**";
 				GENERATE_INFOPLIST_FILE = YES;
@@ -3567,8 +3566,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.6;
-				PRODUCT_BUNDLE_IDENTIFIER = lo.cafe.winston;
+				MARKETING_VERSION = 1.2.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.phfactor.winston;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -3582,8 +3581,8 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z2NNLU4F7U;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = NSR65JVW9F;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "winston-everywhere/Info.plist";
@@ -3596,12 +3595,12 @@
 					"@executable_path/../../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "lo.cafe.winston.winston-everywhere";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.phfactor.winston.everywhere";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3616,8 +3615,8 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = Z2NNLU4F7U;
+				CURRENT_PROJECT_VERSION = 3;
+				DEVELOPMENT_TEAM = NSR65JVW9F;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "winston-everywhere/Info.plist";
@@ -3630,12 +3629,12 @@
 					"@executable_path/../../Frameworks",
 				);
 				LIBRARY_SEARCH_PATHS = "";
-				MARKETING_VERSION = 1.1.2;
+				MARKETING_VERSION = 1.2.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "lo.cafe.winston.winston-everywhere";
+				PRODUCT_BUNDLE_IDENTIFIER = "net.phfactor.winston.everywhere";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -3754,8 +3753,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sindresorhus/Defaults";
 			requirement = {
-				branch = main;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.2.0;
 			};
 		};
 		EC593B072A47B42D002D6454 /* XCRemoteSwiftPackageReference "KeychainAccess" */ = {

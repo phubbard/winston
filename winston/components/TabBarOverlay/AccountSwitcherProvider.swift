@@ -147,7 +147,7 @@ struct AccountSwitcherProvider<Content: View>: View {
         AccountSwitcherOverlayView(fingerPosition: positionInfo, appear: transmitter.showing, transmitter: transmitter).zIndex(3).allowsHitTesting(false)
           .zIndex(3)
           .onAppear { transmitter.showing = true }
-          .onChange(of: transmitter.showing) { if !$0 { selectCredential() } }
+          .onChange(of: transmitter.showing) { _, newValue in if !newValue { selectCredential() } }
           .allowsHitTesting(false)
       }
     }

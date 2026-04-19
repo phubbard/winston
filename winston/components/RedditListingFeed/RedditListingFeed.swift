@@ -118,7 +118,7 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
                             ProgressView()
                                 .frame(maxWidth: .infinity, minHeight: geo.size.height)
                                 .padding(.bottom, 32)
-                                .id(UUID())
+                                .id("initial-loading-indicator")
                         }
                     case .empty:
                         Text("Nothing around here :(")
@@ -126,7 +126,7 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
                     case .error, .endOfFeed, .items:
                         
                         Section {
-                            ForEach(Array(itemsManager.entities.enumerated()), id: \.element) { i, el in
+                            ForEach(itemsManager.entities) { el in
                                 Group {
                                     switch el {
                                     case .post(let post):
@@ -136,8 +136,8 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
                                                 .environment(\.contextSubreddit, sub)
                                                 .environment(\.contextPostWinstonData, winstonData)
                                                 .listRowInsets(EdgeInsets(top: paddingV, leading: paddingH, bottom: paddingV, trailing: paddingH))
-                                            
-                                            if isThereDivider && (i != (itemsManager.entities.count - 1)) {
+
+                                            if isThereDivider && el.id != itemsManager.entities.last?.id {
                                                 NiceDivider(divider: selectedTheme.postLinks.divider)
                                                     .id("\(post.id)-divider")
                                                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -171,16 +171,16 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
                                         let paddingV = selectedTheme.postLinks.spacing / (isThereDivider ? 4 : 2)
                                         MessageLink(message: message)
                                             .listRowInsets(EdgeInsets(top: paddingV, leading: paddingH, bottom: paddingV, trailing: paddingH))
-                                        
-                                        if isThereDivider && (i != (itemsManager.entities.count - 1)) {
+
+                                        if isThereDivider && el.id != itemsManager.entities.last?.id {
                                             NiceDivider(divider: selectedTheme.postLinks.divider)
                                                 .id("\(message.id)-divider")
                                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                                         }
                                     }
                                 }
-                                .onAppear { Task { await itemsManager.elementAppeared(entity: el, index: i) } }
-                                .onDisappear { Task { await itemsManager.elementDisappeared(entity: el, index: i) } }
+                                .onAppear { Task { await itemsManager.elementAppeared(entity: el, index: itemsManager.entities.firstIndex(of: el) ?? 0) } }
+                                .onDisappear { Task { await itemsManager.elementDisappeared(entity: el, index: itemsManager.entities.firstIndex(of: el) ?? 0) } }
                             }
                         }
                         
@@ -217,7 +217,7 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
                         Section {
                             ProgressView()
                                 .frame(maxWidth: .infinity, minHeight: 150)
-                                .id(UUID())
+                                .id("loading-more-indicator")
                         }
                     }
                 }

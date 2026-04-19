@@ -156,12 +156,12 @@ struct VideoPlayerPost: View, Equatable {
             sharedVideo.player.play()
           }
         }
-        .onChange(of: scenePhase) { newPhase in
+        .onChange(of: scenePhase) { _, newPhase in
           if newPhase == .active {
             if (sharedVideo.player.status == .failed) {
               resetVideo?(sharedVideo)
             }
-            
+
             if autoPlayVideos {
               sharedVideo.player.play()
             }
@@ -175,12 +175,12 @@ struct VideoPlayerPost: View, Equatable {
             sharedVideo.player.pause()
           }
         }
-        .onChange(of: fullscreen) { val in
+        .onChange(of: fullscreen) { _, val in
           if !firstFullscreen {
             firstFullscreen = true
 						sharedVideo.player.isMuted = muteVideos
             sharedVideo.player.play()
-          } 
+          }
 					if !val && !autoPlayVideos {
 						sharedVideo.player.seek(to: .zero)
 						sharedVideo.player.pause()
@@ -218,16 +218,16 @@ struct VideoPlayerPost: View, Equatable {
         forName: .AVPlayerItemFailedToPlayToEndTime,
         object: sharedVideo.player.currentItem,
         queue: nil) { notif in
-          Task(priority: .background) {
+          Task { @MainActor in
             resetVideo?(sharedVideo)
           }
         }
-      
+
       NotificationCenter.default.addObserver(
         forName: .AVPlayerItemPlaybackStalled,
         object: sharedVideo.player.currentItem,
         queue: nil) { notif in
-          Task(priority: .background) {
+          Task { @MainActor in
             resetVideo?(sharedVideo)
           }
         }
@@ -273,7 +273,7 @@ struct FullScreenVP: View {
         : GeometryReader { geo in
           Color.clear
             .onAppear { altSize = geo.size }
-            .onChange(of: geo.size) { newValue in altSize = newValue }
+            .onChange(of: geo.size) { _, newValue in altSize = newValue }
         }
       )
     //      .pinchToZoom(size: sharedVideo.size == .zero ? altSize : sharedVideo.size, isPinching: $isPinching, scale: $scale, anchor: $anchor, offset: $offset)
