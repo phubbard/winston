@@ -1,26 +1,26 @@
 {
   "title": "What's new in Winston",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "features": [
     {
-      "subtitle": "Switching between Home, Popular, All, and Saved feeds no longer shows an error screen.",
-      "systemImage": "arrow.left.arrow.right",
-      "title": "Fixed feed switching"
+      "subtitle": "Choose between Dark, Light, or System appearance in Settings.",
+      "systemImage": "moon.fill",
+      "title": "Dark mode support"
     },
     {
-      "subtitle": "Fetching more posts while scrolling no longer causes the view to jump.",
-      "systemImage": "scroll.fill",
-      "title": "Smoother pagination"
+      "subtitle": "Tapping a post in the feed always opens the post, not the image viewer.",
+      "systemImage": "hand.tap.fill",
+      "title": "Consistent post taps"
     },
     {
-      "subtitle": "Removed ThemeStore and WinstonAPI code that connected to third-party servers.",
-      "systemImage": "lock.shield.fill",
-      "title": "Removed phone-home code"
+      "subtitle": "Build number is now auto-generated from git history for both app and extension.",
+      "systemImage": "number.circle.fill",
+      "title": "Auto build numbers"
     },
     {
-      "subtitle": "Fixed a missing bundle version that prevented the app extension from installing.",
-      "systemImage": "wrench.and.screwdriver.fill",
-      "title": "Fixed extension install"
+      "subtitle": "Fixed a crash when opening the Appearance settings screen.",
+      "systemImage": "ant.fill",
+      "title": "Fixed Appearance crash"
     }
   ]
 }
