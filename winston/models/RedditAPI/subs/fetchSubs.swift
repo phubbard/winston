@@ -65,24 +65,32 @@ extension RedditAPI {
       fetchRequest.predicate = NSPredicate(format: "winstonCredentialID == %@", credentialID as CVarArg)
       do {
         let results = try context.fetch(fetchRequest)
-        
-        // Process the fetched results and update CoreData as needed.
-        // Insert or update CachedSub entities with the fetched subs data
-        
+
+        // Deduplicate existing records (CloudKit can re-sync duplicates)
+        var seenUUIDs: [String: CachedSub] = [:]
+        for cachedSub in results {
+          let uuid = cachedSub.uuid ?? ""
+          if let existing = seenUUIDs[uuid] {
+            // Keep the first, delete duplicates
+            context.delete(cachedSub)
+          } else {
+            seenUUIDs[uuid] = cachedSub
+          }
+        }
+        let dedupedResults = Array(seenUUIDs.values)
+
         for sub in subs.compactMap({ $0.data }) {
-          if let existingSub = results.first(where: { $0.uuid == sub.name }) {
-            // Update existing CachedSub
+          if let existingSub = dedupedResults.first(where: { $0.uuid == sub.name }) {
             existingSub.update(data: sub, credentialID: credentialID)
           } else {
-            // Create new CachedSub
             let newSub = CachedSub(context: context)
             newSub.update(data: sub, credentialID: credentialID)
           }
         }
-        
+
         // Delete CachedSubs not present in the fetched subs
         let currentSubsSet = Set(subs.compactMap { $0.data?.name })
-        results.forEach { cachedSub in
+        dedupedResults.forEach { cachedSub in
           if !currentSubsSet.contains(cachedSub.uuid ?? "") {
             context.delete(cachedSub)
           }
