@@ -138,7 +138,7 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
                                                 .environment(\.contextPostWinstonData, winstonData)
                                                 .listRowInsets(EdgeInsets(top: paddingV, leading: paddingH, bottom: paddingV, trailing: paddingH))
 
-                                            if isThereDivider && el.id != itemsManager.entities.last?.id {
+                                            if isThereDivider {
                                                 NiceDivider(divider: selectedTheme.postLinks.divider)
                                                     .id("\(post.id)-divider")
                                                     .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -173,7 +173,7 @@ struct RedditListingFeed<Header: View, Footer: View, S: Sorting>: View {
                                         MessageLink(message: message)
                                             .listRowInsets(EdgeInsets(top: paddingV, leading: paddingH, bottom: paddingV, trailing: paddingH))
 
-                                        if isThereDivider && el.id != itemsManager.entities.last?.id {
+                                        if isThereDivider {
                                             NiceDivider(divider: selectedTheme.postLinks.divider)
                                                 .id("\(message.id)-divider")
                                                 .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
