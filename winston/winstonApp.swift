@@ -9,13 +9,11 @@ import SwiftUI
 import CoreData
 import WhatsNewKit
 import Nuke
-import Defaults
 
 var shortcutItemToProcess: UIApplicationShortcutItem?
 @main
 struct winstonApp: App {
   @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-  @Default(.AppearanceDefSettings) var appearanceDefSettings
   let persistenceController = PersistenceController.shared
 
   var body: some Scene {
@@ -27,7 +25,6 @@ struct winstonApp: App {
           \.whatsNew,
            WhatsNewEnvironment(currentVersion: .current(), whatsNewCollection: getCurrentChangelog())
         )
-        .preferredColorScheme(appearanceDefSettings.colorScheme.colorScheme)
         .task {
           ImagePipeline.shared = ImagePipeline(configuration: .withDataCache(name: "net.phfactor.winston.datacache", sizeLimit: 1024 * 1024 * 300))
         }
