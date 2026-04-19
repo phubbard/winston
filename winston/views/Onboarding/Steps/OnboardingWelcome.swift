@@ -44,7 +44,7 @@ struct OnboardingWelcome: View {
         }
         
         if showText {
-          Text("I'm a beautiful beta client (made with A BUNCH of love) for Reddit where you can use your own API key.")
+          Text("I'm a beautiful client (made with A BUNCH of love) for Reddit where you can use your own API key.")
             .fixedSize(horizontal: false, vertical: true)
             .frame(maxWidth: 300)
             .transition(.opacity)

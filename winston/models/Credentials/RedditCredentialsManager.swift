@@ -107,6 +107,10 @@ class RedditCredentialsManager {
       } else if forceCreate {
         self.credentials.append(cred)
       }
+      // Auto-select if no credential is currently selected
+      if Defaults[.GeneralDefSettings].redditCredentialSelectedID == nil {
+        Defaults[.GeneralDefSettings].redditCredentialSelectedID = cred.id
+      }
       Task(priority: .background) { self.syncCredentialsWithKeychain() }
     }
   }

@@ -1,16 +1,41 @@
 {
   "title": "What's new in Winston",
-  "version": "1.1.3",
+  "version": "1.5.0",
   "features": [
     {
-      "subtitle": "Complete rewrite of how Winston displays the elements in each feed, resulting in a major boost to Winston’s smoothness.",
-      "systemImage": "hare.fill",
-      "title": "Ultra feed component"
+      "subtitle": "Tab bar buttons (Posts, Inbox, Me, Search, Settings) now respond to taps correctly.",
+      "systemImage": "hand.tap.fill",
+      "title": "Fixed tab bar"
     },
     {
-      "subtitle": "Fixed bugs and many crashes.",
-      "systemImage": "hand.thumbsup.fill",
-      "title": "Improved stability"
+      "subtitle": "Fetching new content while scrolling no longer jumps the scroll position.",
+      "systemImage": "scroll.fill",
+      "title": "Smooth scrolling"
+    },
+    {
+      "subtitle": "Post text that was previously truncated with ellipsis now wraps and displays fully.",
+      "systemImage": "text.justify.leading",
+      "title": "Fixed text truncation"
+    },
+    {
+      "subtitle": "Resolved a race condition that could cause the entire app to appear blurred on launch.",
+      "systemImage": "eye.fill",
+      "title": "Fixed startup blur"
+    },
+    {
+      "subtitle": "The 'Go to credentials settings' button and cross-tab navigation now work reliably.",
+      "systemImage": "arrow.triangle.turn.up.right.diamond.fill",
+      "title": "Fixed navigation"
+    },
+    {
+      "subtitle": "New credentials are now auto-selected and the home page updates immediately after setup.",
+      "systemImage": "key.horizontal.fill",
+      "title": "Fixed credential setup"
+    },
+    {
+      "subtitle": "Updated bundle ID, branding, and OAuth flow for the phubbard fork.",
+      "systemImage": "arrow.branch",
+      "title": "Forked and maintained"
     }
   ]
 }

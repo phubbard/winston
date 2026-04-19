@@ -18,10 +18,8 @@ struct Settings: View {
   @Environment(\.openURL) private var openURL
   //  @Default(.likedButNotSubbed) private var likedButNotSubbed
   @Environment(\.useTheme) private var selectedTheme
-  @Environment(\.openTipJar) private var openTipJar
   @State private var id = UUID().uuidString
   @State private var presentingWhatsNew: Bool = false
-  @State private var presentingAnnouncement: Bool = false
   
   init(router: Router) {
     self._router = .init(initialValue: router)
@@ -47,29 +45,8 @@ struct Settings: View {
             }
             .disabled(getCurrentChangelog().isEmpty)
             
-            WSListButton("Announcements", icon: "newspaper") {
-              presentingAnnouncement.toggle()
-            }
-            
-            WSListButton("Donate monthly", icon: "heart.fill") {
-              openURL(URL(string: "https://patreon.com/user?u=93745105")!)
-            }
-            
-            WListButton {
-              openTipJar()
-//              openURL(URL(string: "https://ko-fi.com/locafe")!)
-            } label: {
-              Label {
-                Text("Tip jar")
-              } icon: {
-                Image(.jar)
-                  .resizable()
-                  .scaledToFit()
-              }
-            }
-              
               WSListButton("Report a Bug", icon: "ladybug.fill") {
-                openURL(URL(string: "https://github.com/lo-cafe/winston/issues")!)
+                openURL(URL(string: "https://github.com/phubbard/winston/issues")!)
               }
 
           }

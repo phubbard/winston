@@ -91,7 +91,7 @@ func getDefaultSecondaryAction() -> WhatsNew.SecondaryAction {
         foregroundColor: .accentColor,
         hapticFeedback: .selection,
         action: .openURL(
-            .init(string: "https://github.com/lo-cafe/winston")
+            .init(string: "https://github.com/phubbard/winston")
         )
     )
 }

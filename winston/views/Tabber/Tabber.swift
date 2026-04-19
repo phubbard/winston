@@ -9,8 +9,7 @@ import SwiftUI
 import Defaults
 import SpriteKit
 
-struct Tabber: View, Equatable {
-    static func == (lhs: Tabber, rhs: Tabber) -> Bool { true }
+struct Tabber: View {
     
     var redditCredentialsManager = RedditCredentialsManager.shared
     @State var nav = Nav.shared
@@ -52,7 +51,7 @@ struct Tabber: View, Equatable {
     }
     
     var body: some View {
-        TabView(selection: $nav.activeTab.onUpdate { newTab in if nav.activeTab == newTab { nav.resetStack() } }) {
+        TabView(selection: $nav.activeTab) {
             
             WithCredentialOnly(credential: redditCredentialsManager.selectedCredential) {
                 SubredditsStack(router: nav[.posts])

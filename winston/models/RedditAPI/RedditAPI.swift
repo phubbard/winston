@@ -18,7 +18,7 @@ class RedditAPI {
     static let winstonAPIBase = "https://winston.lo.cafe/api"
     static let redditApiURLBase = "https://oauth.reddit.com"
     static let redditWWWApiURLBase = "https://www.reddit.com"
-    static let appRedirectURI: String = "https://app.winston.cafe/auth-success"
+    static let appRedirectURI: String = "https://www.phfactor.net/winston/auth-success"
     
     var lastAuthState: String?
     var me: User?

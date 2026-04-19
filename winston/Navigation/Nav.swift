@@ -51,9 +51,16 @@ class Nav: Identifiable, Equatable {
   }
   
   var id: UUID
+  private var _suppressNextSameTabReset = false
   var activeTab: TabIdentifier {
     willSet {
-      if activeTab == newValue { self.activeRouter.resetNavPath() }
+      if activeTab == newValue {
+        if _suppressNextSameTabReset {
+          _suppressNextSameTabReset = false
+        } else {
+          self.activeRouter.resetNavPath()
+        }
+      }
     }
   }
   var routers: [TabIdentifier:Router]
@@ -82,8 +89,11 @@ class Nav: Identifiable, Equatable {
   }
   
   func navigateTo(_ tab: TabIdentifier, _ dest: Router.NavDest, _ reset: Bool = true) {
+    if tab != activeTab {
+      _suppressNextSameTabReset = true
+      activeTab = tab
+    }
     routers[tab]?.navigateTo(dest, reset)
-    if tab != activeTab {	activeTab = tab }
   }
   
   func resetStack() { activeRouter.resetNavPath() }
