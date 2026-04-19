@@ -1,41 +1,26 @@
 {
   "title": "What's new in Winston",
-  "version": "1.5.0",
+  "version": "1.5.3",
   "features": [
     {
-      "subtitle": "Tab bar buttons (Posts, Inbox, Me, Search, Settings) now respond to taps correctly.",
-      "systemImage": "hand.tap.fill",
-      "title": "Fixed tab bar"
+      "subtitle": "Switching between Home, Popular, All, and Saved feeds no longer shows an error screen.",
+      "systemImage": "arrow.left.arrow.right",
+      "title": "Fixed feed switching"
     },
     {
-      "subtitle": "Fetching new content while scrolling no longer jumps the scroll position.",
+      "subtitle": "Fetching more posts while scrolling no longer causes the view to jump.",
       "systemImage": "scroll.fill",
-      "title": "Smooth scrolling"
+      "title": "Smoother pagination"
     },
     {
-      "subtitle": "Post text that was previously truncated with ellipsis now wraps and displays fully.",
-      "systemImage": "text.justify.leading",
-      "title": "Fixed text truncation"
+      "subtitle": "Removed ThemeStore and WinstonAPI code that connected to third-party servers.",
+      "systemImage": "lock.shield.fill",
+      "title": "Removed phone-home code"
     },
     {
-      "subtitle": "Resolved a race condition that could cause the entire app to appear blurred on launch.",
-      "systemImage": "eye.fill",
-      "title": "Fixed startup blur"
-    },
-    {
-      "subtitle": "The 'Go to credentials settings' button and cross-tab navigation now work reliably.",
-      "systemImage": "arrow.triangle.turn.up.right.diamond.fill",
-      "title": "Fixed navigation"
-    },
-    {
-      "subtitle": "New credentials are now auto-selected and the home page updates immediately after setup.",
-      "systemImage": "key.horizontal.fill",
-      "title": "Fixed credential setup"
-    },
-    {
-      "subtitle": "Updated bundle ID, branding, and OAuth flow for the phubbard fork.",
-      "systemImage": "arrow.branch",
-      "title": "Forked and maintained"
+      "subtitle": "Fixed a missing bundle version that prevented the app extension from installing.",
+      "systemImage": "wrench.and.screwdriver.fill",
+      "title": "Fixed extension install"
     }
   ]
 }
