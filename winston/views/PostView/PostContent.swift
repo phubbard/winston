@@ -81,7 +81,7 @@ struct PostContent: View, Equatable {
                 if !(data.selftext?.isEmpty ?? true) {
                     HStack{
                   Markdown(MarkdownUtil.formatForMarkdown(data.selftext ?? "", showSpoiler: showSpoiler))
-                    .markdownTheme(.winstonMarkdown(fontSize: selectedTheme.posts.bodyText.size, lineSpacing: selectedTheme.posts.linespacing))
+                    .markdownTheme(.winstonMarkdown(fontSize: selectedTheme.posts.bodyText.size, lineSpacing: selectedTheme.posts.linespacing, textSelection: true))
                     .fixedSize(horizontal: false, vertical: true)
 
                         Spacer()

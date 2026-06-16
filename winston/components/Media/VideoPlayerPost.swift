@@ -343,6 +343,24 @@ struct AVPlayerRepresentable: UIViewRepresentable {
     }
   }
 
+  // Without this, every video cell scrolled past leaks its AVPlayerViewController:
+  // `makeUIView` calls `controller.addChild(...)` but nothing ever calls
+  // `removeFromParent()`, so the child VC (and its AVPlayerLayer / decode session)
+  // stays alive on the long-lived feed controller. iOS only allows ~16 simultaneous
+  // video pipelines, so after scrolling past enough videos new ones can't render
+  // (no autoplay in the list, a frame or two then a stall in the post). Detaching
+  // here releases the layer's decode session while leaving the shared cached
+  // AVPlayer intact for reuse.
+  static func dismantleUIView(_ uiView: UIView, coordinator: Coordinator) {
+    if let playerController = coordinator.controller {
+      playerController.willMove(toParent: nil)
+      playerController.view.removeFromSuperview()
+      playerController.removeFromParent()
+      playerController.player = nil
+    }
+    coordinator.controller = nil
+  }
+
   func makeCoordinator() -> Coordinator {
     Coordinator()
   }

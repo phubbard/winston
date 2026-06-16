@@ -41,6 +41,8 @@ Winston requires iOS 17+ and your own Reddit API credentials.
 - Added dark mode / light mode / system appearance setting
 - Fixed feed switching error when navigating between Home/Popular/All/Saved
 - Auto build numbers from git commit count
+- Fixed video playback breaking after scrolling past many videos (leaked AVPlayer view controllers were exhausting iOS's limited video decode pipelines; previously only a force-restart recovered it)
+- Added text selection on post body text (long-press to select, Look Up, Copy, Share)
 
 ## Contributing
 

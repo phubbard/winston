@@ -9,6 +9,21 @@ import Foundation
 import Defaults
 import SwiftUI
 
+enum ThumbnailSizeModifier: Codable, CaseIterable, Identifiable, Defaults.Serializable {
+  var id: CGFloat { self.rawVal }
+
+  case hidden, small, medium, large
+
+  var rawVal: CGFloat {
+    switch self {
+    case .hidden: return 0.0
+    case .small: return 0.75
+    case .medium: return 1.0
+    case .large: return 1.25
+    }
+  }
+}
+
 enum HSide: String, Equatable, Codable, Hashable, Defaults.Serializable {
   case leading, trailing
 }
@@ -32,7 +47,7 @@ struct PostLinkDefSettings: Equatable, Hashable, Codable, Defaults.Serializable 
   var showVotesCluster: Bool = true
   var showUpVoteRatio: Bool = false
   var blurNSFW: Bool = true
-  var isMediaTappable: Bool = true
+  var isMediaTappable: Bool = false
   var showSelfText: Bool = true
   var enableVotesPopover: Bool = false
   var maxMediaHeightScreenPercentage: Double = 100

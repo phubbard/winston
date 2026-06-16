@@ -13,6 +13,7 @@ struct AppContent: View {
     
     //  @Default(.ThemesDefSettings) private var themesDefSettings
     @Default(.GeneralDefSettings) private var generalDefSettings
+    @Default(.AppearanceDefSettings) private var appearanceDefSettings
     
     //  var selectedTheme: WinstonTheme { themesDefSettings.themesPresets.first { $0.id == themesDefSettings.selectedThemeID } ?? defaultTheme }
     
@@ -109,6 +110,7 @@ struct AppContent: View {
             }
         }
         .blur(radius: CGFloat(lockBlur)) // Set lockscreen blur
+        .preferredColorScheme(appearanceDefSettings.colorScheme.colorScheme)
     }
     
     func addQuickActions() {

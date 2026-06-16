@@ -32,15 +32,20 @@ class RedditCredentialsManager {
   }
   
   func syncCredentialsWithKeychain() {
-    Self.keychain.allKeys().forEach { keychainCredID in
-      if self.credentials.first(where: { $0.id.uuidString == keychainCredID }) == nil {
-        try? Self.keychain.remove(keychainCredID)
+    do {
+      let allKeys = try Self.keychain.allKeys()
+      for keychainCredID in allKeys {
+        if self.credentials.first(where: { $0.id.uuidString == keychainCredID }) == nil {
+          try Self.keychain.remove(keychainCredID)
+        }
       }
-    }
-    self.credentials.forEach { cred in
-      if let encoded = cred.toStr() {
-        RedditCredentialsManager.keychain[cred.id.uuidString] = encoded
+      for cred in self.credentials {
+        if let encoded = cred.toStr() {
+          try Self.keychain.set(encoded, key: cred.id.uuidString)
+        }
       }
+    } catch {
+      print("Keychain sync error: \(error.localizedDescription)")
     }
   }
   
@@ -111,7 +116,8 @@ class RedditCredentialsManager {
       if Defaults[.GeneralDefSettings].redditCredentialSelectedID == nil {
         Defaults[.GeneralDefSettings].redditCredentialSelectedID = cred.id
       }
-      Task(priority: .background) { self.syncCredentialsWithKeychain() }
+      // Sync immediately on main queue to avoid XPC violations
+      self.syncCredentialsWithKeychain()
     }
   }
   
@@ -120,7 +126,8 @@ class RedditCredentialsManager {
       withAnimation {
         self.credentials = self.credentials.filter { $0.id != cred.id }
       }
-      Task(priority: .background) { self.syncCredentialsWithKeychain() }
+      // Sync immediately on main queue to avoid XPC violations
+      self.syncCredentialsWithKeychain()
     }
   }
 
@@ -128,7 +135,12 @@ class RedditCredentialsManager {
   func wipeAllCredentials() {
     DispatchQueue.main.async {
       withAnimation { self.credentials.removeAll() }
-      Task(priority: .background) { try? Self.keychain.removeAll() }
+      // Remove keychain items immediately to avoid XPC violations
+      do {
+        try Self.keychain.removeAll()
+      } catch {
+        print("Error wiping keychain: \(error.localizedDescription)")
+      }
     }
   }
 }
