@@ -44,6 +44,22 @@ struct SharedVideo: Equatable {
   }
 }
 
+/// Holds block-based NotificationCenter tokens for a video and removes them on teardown.
+/// Block observers can ONLY be removed with the token returned at registration, and this
+/// bag's deinit guarantees removal even if SwiftUI recycles a cell without calling onDisappear.
+final class VideoObserverBag {
+  private var tokens: [NSObjectProtocol] = []
+  func set(_ newTokens: [NSObjectProtocol]) {
+    removeAll()
+    tokens = newTokens
+  }
+  func removeAll() {
+    tokens.forEach { NotificationCenter.default.removeObserver($0) }
+    tokens = []
+  }
+  deinit { removeAll() }
+}
+
 struct VideoPlayerPost: View, Equatable {
   static func == (lhs: VideoPlayerPost, rhs: VideoPlayerPost) -> Bool {
     lhs.url == rhs.url && lhs.sharedVideo == rhs.sharedVideo
@@ -62,7 +78,8 @@ struct VideoPlayerPost: View, Equatable {
   @State private var fullscreen = false
   @Default(.VideoDefSettings) private var videoDefSettings
   @Environment(\.scenePhase) private var scenePhase
-  
+  @State private var observerBag = VideoObserverBag()
+
   private var autoPlayVideos: Bool { videoDefSettings.autoPlay }
   private var loopVideos: Bool { videoDefSettings.loop }
   private var muteVideos: Bool { videoDefSettings.mute }
@@ -203,54 +220,29 @@ struct VideoPlayerPost: View, Equatable {
   }
   
   func addObserver() {
-    if let sharedVideo = sharedVideo {
-      NotificationCenter.default.addObserver(
-        forName: .AVPlayerItemDidPlayToEndTime,
-        object: sharedVideo.player.currentItem,
-        queue: nil) { notif in
-          Task(priority: .background) {
-            sharedVideo.player.seek(to: .zero)
-            sharedVideo.player.play()
-          }
+    guard let sharedVideo = sharedVideo else { return }
+    let center = NotificationCenter.default
+    let item = sharedVideo.player.currentItem
+    let reset = resetVideo
+    // Store the tokens so they can actually be removed; the bag's deinit is the safety net.
+    observerBag.set([
+      center.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { _ in
+        Task(priority: .background) {
+          sharedVideo.player.seek(to: .zero)
+          sharedVideo.player.play()
         }
-      
-      NotificationCenter.default.addObserver(
-        forName: .AVPlayerItemFailedToPlayToEndTime,
-        object: sharedVideo.player.currentItem,
-        queue: nil) { notif in
-          Task { @MainActor in
-            resetVideo?(sharedVideo)
-          }
-        }
-
-      NotificationCenter.default.addObserver(
-        forName: .AVPlayerItemPlaybackStalled,
-        object: sharedVideo.player.currentItem,
-        queue: nil) { notif in
-          Task { @MainActor in
-            resetVideo?(sharedVideo)
-          }
-        }
-    }
+      },
+      center.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: item, queue: nil) { _ in
+        Task { @MainActor in reset?(sharedVideo) }
+      },
+      center.addObserver(forName: .AVPlayerItemPlaybackStalled, object: item, queue: nil) { _ in
+        Task { @MainActor in reset?(sharedVideo) }
+      },
+    ])
   }
-  
+
   func removeObserver() {
-    if let sharedVideo = sharedVideo {
-      NotificationCenter.default.removeObserver(
-        self,
-        name: .AVPlayerItemDidPlayToEndTime,
-        object: sharedVideo.player.currentItem)
-      
-      NotificationCenter.default.removeObserver(
-        self,
-        name: .AVPlayerItemFailedToPlayToEndTime,
-        object: sharedVideo.player.currentItem)
-      
-      NotificationCenter.default.removeObserver(
-        self,
-        name: .AVPlayerItemPlaybackStalled,
-        object: sharedVideo.player.currentItem)
-    }
+    observerBag.removeAll()
   }
 }
 
@@ -375,6 +367,7 @@ class NiceAVPlayer: AVPlayerViewController, AVPlayerViewControllerDelegate {
   var autoPlayVideos: Bool
   var ida = UUID().uuidString
   var gone = true
+  private var loopObserver: NSObjectProtocol?
   @Default(.VideoDefSettings) private var videoDefSettings
   override open var prefersStatusBarHidden: Bool {
     return true
@@ -396,12 +389,12 @@ class NiceAVPlayer: AVPlayerViewController, AVPlayerViewControllerDelegate {
 
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
-    if videoDefSettings.loop, let player = self.player {
-      NotificationCenter.default.addObserver(
+    if videoDefSettings.loop, let player = self.player, loopObserver == nil {
+      loopObserver = NotificationCenter.default.addObserver(
         forName: .AVPlayerItemDidPlayToEndTime,
         object: player.currentItem,
-        queue: nil) { [weak self] notif in
-          guard let _ = self else { return }
+        queue: nil) { [weak self] _ in
+          guard self != nil else { return }
           player.seek(to: .zero)
           player.play()
         }
@@ -414,16 +407,19 @@ class NiceAVPlayer: AVPlayerViewController, AVPlayerViewControllerDelegate {
 
   override func viewDidDisappear(_ animated: Bool) {
     super.viewDidDisappear(animated)
-    if let player = self.player {
-      NotificationCenter.default.removeObserver(
-        self,
-        name: .AVPlayerItemDidPlayToEndTime,
-        object: player.currentItem)
+    // Block observers need the token to be removed; removeObserver(self,…) removed nothing.
+    if let token = loopObserver {
+      NotificationCenter.default.removeObserver(token)
+      loopObserver = nil
     }
     if !showsPlaybackControls {
       player?.pause()
       gone = true
     }
+  }
+
+  deinit {
+    if let token = loopObserver { NotificationCenter.default.removeObserver(token) }
   }
 
   @objc private func didTapView() {

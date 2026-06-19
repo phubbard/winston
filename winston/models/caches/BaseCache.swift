@@ -25,7 +25,9 @@ struct CacheItem<T>: Identifiable, Equatable {
 class BaseCache<T: Any>: ObservableObject {
   @Published var cache: [String: CacheItem<T>] = [:]
   let cacheLimit: Int
-  
+  /// Optional teardown run (on the main actor) for the item evicted when the cache overflows.
+  var onEvict: ((T) -> Void)? = nil
+
   init(cacheLimit: Int = 50, cache: [String:CacheItem<T>] = [:]) {
     self.cacheLimit = cacheLimit
     self.cache = cache
@@ -48,14 +50,16 @@ class BaseCache<T: Any>: ObservableObject {
       let oldestKey = cache.count > cacheLimit ? allowedToRemoveCacheList.min { a, b in a.value.createdAt < b.value.createdAt }?.key : nil
       
       await MainActor.run {
+        var evicted: T? = nil
         withAnimation {
           cache[key] = item
-          if let oldestKey = oldestKey { cache.removeValue(forKey: oldestKey) }
+          if let oldestKey = oldestKey { evicted = cache.removeValue(forKey: oldestKey)?.data }
         }
+        if let evicted = evicted { onEvict?(evicted) }
       }
     }
   }
-  
+
   func merge(_ dict: [String:T]) async {
     let newDict = dict.mapValues { CacheItem(data: $0, createdAt: Date()) }
     let allowedToRemoveCacheList = cache.filter { !$0.value.eternal }
