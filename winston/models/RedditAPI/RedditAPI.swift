@@ -145,7 +145,7 @@ class RedditAPI {
     }
     
     func injectFirstAccessTokenInto(_ credential: inout RedditCredential, authCode: String) async -> Bool {
-        if !credential.apiAppID.isEmpty && !credential.apiAppSecret.isEmpty {
+        if !credential.apiAppID.isEmpty {
             let headers = await fetchRequestHeaders(includeAuth: false)
             var code = authCode
             if code.hasSuffix("#_") {

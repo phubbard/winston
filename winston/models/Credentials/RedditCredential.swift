@@ -14,7 +14,7 @@ import Combine
 
 struct RedditCredential: Identifiable, Equatable, Hashable, Codable {
     static func defaultUserAgent(userName: String? = nil) -> String {
-        return "ios:net.phfactor.winston:v0.1.0 (by /u/\(userName ?? "UnknownUser"))"
+        return "ios:net.phfactor.winston:v1.6.0 (by /u/\(userName ?? "UnknownUser"))"
     }
     
     enum CodingKeys: String, CodingKey { case id, apiAppID, apiAppSecret, accessToken, refreshToken, userName, profilePicture, _userAgent }
@@ -39,11 +39,13 @@ struct RedditCredential: Identifiable, Equatable, Hashable, Codable {
     var validationStatus: CredentialValidationState {
         var newRedditAPIPairState: CredentialValidationState = .empty
         
-        if self.apiAppID.count == 22 && self.apiAppSecret.count == 30 {
+        // Installed-app credentials have only a client id (no secret), so validity keys off the
+        // 22-char app id alone. Existing web-app creds (also a 22-char id) remain valid too.
+        if self.apiAppID.count == 22 {
             newRedditAPIPairState = .valid
-        } else if self.apiAppID.count > 10 && self.apiAppSecret.count > 20 {
+        } else if self.apiAppID.count > 10 {
             newRedditAPIPairState = .maybeValid
-        } else if self.apiAppID.count > 0 || self.apiAppSecret.count > 0 {
+        } else if self.apiAppID.count > 0 {
             newRedditAPIPairState = .invalid
         }
         
@@ -106,7 +108,7 @@ struct RedditCredential: Identifiable, Equatable, Hashable, Codable {
     }
     
     func getUpToDateToken(forceRenew: Bool = false, saveToken: Bool = true) async -> AccessToken? {
-        guard let refreshToken = self.refreshToken, !apiAppID.isEmpty && !apiAppSecret.isEmpty else { return nil }
+        guard let refreshToken = self.refreshToken, !apiAppID.isEmpty else { return nil }
         if !forceRenew, let accessToken = self.accessToken {
             let lastRefresh = Double(accessToken.lastRefresh.timeIntervalSince1970)
             let expiration = Double(max(0, accessToken.expiration - 100))
