@@ -15,7 +15,7 @@ struct GuidedAuthSuccessScene: View {
         BetterLottieView("party-appear", size: 128, skipInitialProgress: 0.02, color: nil)
         VStack(spacing: 4) {
         Text("Sweeeet!").fontSize(32, .bold)
-        Text("Everything went well. You can start using Winston now!").opacity(0.9)
+        Text("Everything went well. You can start using Marlowe now!").opacity(0.9)
       }
       }
       VStack(spacing: 16) {

@@ -48,7 +48,7 @@ struct GeneralPanel: View {
                 Section("Backup"){
                     WListButton {
                         let date = Date()
-                        let file = exportUserDefaultsToJSON(fileName: "WinstonSettings-" + date.ISO8601Format() + ".json")
+                        let file = exportUserDefaultsToJSON(fileName: "MarloweSettings-" + date.ISO8601Format() + ".json")
                         if let file {
                             isMoving.toggle()
                             settingsFileURL = file

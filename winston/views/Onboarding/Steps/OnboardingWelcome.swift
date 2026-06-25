@@ -38,7 +38,7 @@ struct OnboardingWelcome: View {
           }
           
           if showAppName {
-            (Text("I'm ").font(Font.system(size: 24, weight: .semibold)).foregroundColor(.primary.opacity(0.75)) + Text("Winston").font(Font.system(size: 34, weight: .bold)).foregroundColor(.yellow))
+            (Text("I'm ").font(Font.system(size: 24, weight: .semibold)).foregroundColor(.primary.opacity(0.75)) + Text("Marlowe").font(Font.system(size: 34, weight: .bold)).foregroundColor(.yellow))
               .transition(.scaleAndBlur)
           }
         }
@@ -52,7 +52,7 @@ struct OnboardingWelcome: View {
       }
         
         if showBtn {
-          MasterButton(label: "👋 Hi, Winston!", colorHoverEffect: .animated, textSize: 18, height: 48, cornerRadius: 16, action: nextStep)
+          MasterButton(label: "👋 Hi, Marlowe!", colorHoverEffect: .animated, textSize: 18, height: 48, cornerRadius: 16, action: nextStep)
             .padding(.top, 16)
             .transition(.scaleAndBlur)
         }

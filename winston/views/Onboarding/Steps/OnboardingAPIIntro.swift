@@ -45,7 +45,7 @@ struct OnboardingAPIIntro: View {
         VStack {
           Text("First, I need an API key")
             .fontSize(24, .semibold)
-          Text("To use Reddit, Winston uses a special key you can generate yourself in Reddit's site.")
+          Text("To use Reddit, Marlowe uses a special key you can generate yourself in Reddit's site.")
             .opacity(0.75)
         }
         .multilineTextAlignment(.center)
@@ -53,7 +53,7 @@ struct OnboardingAPIIntro: View {
         VStack(spacing: 6) {
           Feature(icon: "arrow.up", title: "Huge limit", description: "Reddit API limit is 100 requests per second, it's impossible to reach.")
           Feature(icon: "dollarsign", title: "No costs at all", description: "Even if you pass the limit, there will be no charges, you only get an error.")
-          Feature(icon: "point.topleft.down.curvedto.point.bottomright.up.fill", title: "Easy to setup", description: "It's really easy to get set Winston up. We'll guide all the way!")
+          Feature(icon: "point.topleft.down.curvedto.point.bottomright.up.fill", title: "Easy to setup", description: "It's really easy to get set Marlowe up. We'll guide all the way!")
           Feature(icon: "eye.slash.fill", title: "Safe and private", description: "The key is **only** stored in your iCloud keychain, we can't read it.")
         }
         
