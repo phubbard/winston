@@ -16,17 +16,10 @@ import UIKit
 
 class Caches {
   static let postsAttrStr = BaseCache<AttributedString>(cacheLimit: 100)
-  static let videos: BaseCache<SharedVideo> = {
-    // iOS allows only ~16 simultaneous video decode pipelines. Each cached AVPlayer holding a
-    // ready item keeps one warm, so cap well under that and fully tear down the evicted player
-    // on overflow — otherwise old players pile up over a long session and starve new videos
-    // (no autoplay in the list; a frame then a stall in the post, until a force-restart).
-    let cache = BaseCache<SharedVideo>(cacheLimit: 12)
-    cache.onEvict = { evicted in
-      evicted.player.pause()
-      evicted.player.replaceCurrentItem(with: nil)
-    }
-    return cache
-  }()
+  // The decode-pipeline leak is per-AVPlayerLayer, not per-AVPlayer, so the inline player view
+  // (InlinePlayerLayer) owns layer teardown. We deliberately do NOT replaceCurrentItem(nil) on
+  // eviction: PostWinstonData strongly retains the same SharedVideo, so niling its item left a
+  // dead/blank video on scroll-back. Just cap the dictionary.
+  static let videos = BaseCache<SharedVideo>(cacheLimit: 12)
   static let streamable = BaseCache<StreamableCached>(cacheLimit: 100)
 }

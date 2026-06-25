@@ -5,42 +5,50 @@ import AVKit
 import AVFoundation
 import Combine
 
+/// Owns ONE AVPlayer for the lifetime of a single VideoPlayerPost view. Held via @StateObject, so its
+/// `deinit` fires reliably when SwiftUI destroys the cell (de-realizes it from the List) — unlike
+/// `onDisappear`, which a List fires unreliably. This is the fix for the real bug: previously each
+/// SharedVideo stored its own AVPlayer and PostWinstonData's append-only feed-entity list pinned it
+/// alive forever, so players NEVER deallocated (52 after one feed load, climbing for the whole
+/// session) until iOS silently stopped letting new players start and videos froze until a restart.
+/// Tying the player to the view's lifetime caps the live count to the List's realization window and
+/// guarantees teardown.
+final class VideoPlayerHolder: ObservableObject {
+  let player: AVPlayer?
+  init(url: URL?) {
+    if let url = url {
+      let p = AVPlayer(playerItem: AVPlayerItem(url: url))
+      p.volume = 0.0
+      player = p
+    } else {
+      player = nil
+    }
+  }
+  deinit {
+    player?.pause()
+    player?.replaceCurrentItem(with: nil)
+  }
+}
+
 struct SharedVideo: Equatable {
   static func == (lhs: SharedVideo, rhs: SharedVideo) -> Bool {
-    lhs.url == rhs.url && lhs.player.currentItem == rhs.player.currentItem
+    lhs.url == rhs.url && lhs.size == rhs.size
   }
-  
-  var player: AVPlayer
+
   var url: URL
   var size: CGSize
-  
+
   static func get(url: URL, size: CGSize, resetCache: Bool = false) -> SharedVideo {
-    let cacheKey =  SharedVideo.cacheKey(url: url, size: size)
-    
-    if resetCache {
-      Caches.videos.cache.removeValue(forKey: cacheKey)
-    }
-    
-    if let sharedVideo = Caches.videos.get(key: cacheKey) {
-      return sharedVideo
-    } else {
-      let sharedVideo = SharedVideo(url: url, size: size)
-      Caches.videos.addKeyValue(key: cacheKey, data: { sharedVideo }, expires: Date().dateByAdding(1, .day).date)
-      
-      return sharedVideo
-    }
+    return SharedVideo(url: url, size: size)
   }
 
   static func cacheKey(url: URL, size: CGSize) -> String {
     return "\(url.absoluteString):\(size.width)x\(size.height)"
   }
-  
+
   init(url: URL, size: CGSize) {
     self.url = url
     self.size = size
-    let newPlayer = AVPlayer(url: url)
-    newPlayer.volume = 0.0
-    self.player = newPlayer
   }
 }
 
@@ -79,6 +87,8 @@ struct VideoPlayerPost: View, Equatable {
   @Default(.VideoDefSettings) private var videoDefSettings
   @Environment(\.scenePhase) private var scenePhase
   @State private var observerBag = VideoObserverBag()
+  @State private var isVisible = false
+  @StateObject private var holder: VideoPlayerHolder
 
   private var autoPlayVideos: Bool { videoDefSettings.autoPlay }
   private var loopVideos: Bool { videoDefSettings.loop }
@@ -95,6 +105,7 @@ struct VideoPlayerPost: View, Equatable {
     self.size = cachedVideo?.size ?? .zero
     self.resetVideo = resetVideo
     self.maxMediaHeightScreenPercentage = maxMediaHeightScreenPercentage
+    _holder = StateObject(wrappedValue: VideoPlayerHolder(url: cachedVideo != nil ? url : nil))
   }
   
   var safe: Double { getSafeArea().top + getSafeArea().bottom }
@@ -107,10 +118,10 @@ struct VideoPlayerPost: View, Equatable {
     let propHeight = (contentWidth * sourceHeight) / sourceWidth
     let finalHeight = maxMediaHeightScreenPercentage != 110 ? Double(min(maxHeight, propHeight)) : Double(propHeight)
     
-    if let sharedVideo = sharedVideo {
-			let hasAudio = sharedVideo.player.currentItem?.tracks.contains(where: {$0.assetTrack?.mediaType == AVMediaType.audio})
+    if let sharedVideo = sharedVideo, let player = holder.player {
+			// (player comes from the per-view holder, bound in the if-let above)
       if let controller = controller {
-        AVPlayerRepresentable(fullscreen: $fullscreen, autoPlayVideos: autoPlayVideos, player: sharedVideo.player, aspect: .resizeAspectFill, controller: controller)
+        AVPlayerRepresentable(fullscreen: $fullscreen, autoPlayVideos: autoPlayVideos, player: player, aspect: .resizeAspectFill, controller: controller)
           .frame(width: compact ? scaledCompactModeThumbSize() : contentWidth, height: compact ? scaledCompactModeThumbSize() : CGFloat(finalHeight))
           .mask(RR(12, Color.black))
           .allowsHitTesting(false)
@@ -125,9 +136,11 @@ struct VideoPlayerPost: View, Equatable {
         ZStack {
           
           Group {
-            if !fullscreen {
-              VideoPlayer(player: sharedVideo.player)
-                .scaledToFill()
+            // Only attach a player layer (= a decode pipeline) when this cell is actually
+            // on-screen and not in fullscreen. Off-screen cells render Color.clear, which
+            // tears the layer down via InlinePlayerLayer.dismantleUIView and frees the pipeline.
+            if isVisible && !fullscreen {
+              InlinePlayerLayer(player: player)
             } else {
               Color.clear
             }
@@ -160,47 +173,48 @@ struct VideoPlayerPost: View, Equatable {
           Image(systemName: "play.fill").foregroundColor(.white.opacity(0.75)).fontSize(32).shadow(color: .black.opacity(0.45), radius: 12, y: 8).opacity(autoPlayVideos ? 0 : 1).allowsHitTesting(false)
         }
         .onAppear {
-          
+          isVisible = true
           if loopVideos {
-            addObserver()
+            addObserver(player)
           }
           
-          if (sharedVideo.player.status == .failed) {
+          if (player.status == .failed) {
             resetVideo?(sharedVideo)
           }
-          
+
           if autoPlayVideos {
-            sharedVideo.player.play()
+            player.play()
           }
         }
         .onChange(of: scenePhase) { _, newPhase in
           if newPhase == .active {
-            if (sharedVideo.player.status == .failed) {
+            if (player.status == .failed) {
               resetVideo?(sharedVideo)
             }
 
             if autoPlayVideos {
-              sharedVideo.player.play()
+              player.play()
             }
           }
         }
         .onDisappear() {
+            isVisible = false
             removeObserver()
           Task(priority: .background) {
 //            setAudioToMixWithOthers(false)
-            sharedVideo.player.seek(to: .zero)
-            sharedVideo.player.pause()
+            player.seek(to: .zero)
+            player.pause()
           }
         }
         .onChange(of: fullscreen) { _, val in
           if !firstFullscreen {
             firstFullscreen = true
-						sharedVideo.player.isMuted = muteVideos
-            sharedVideo.player.play()
+						player.isMuted = muteVideos
+            player.play()
           }
 					if !val && !autoPlayVideos {
-						sharedVideo.player.seek(to: .zero)
-						sharedVideo.player.pause()
+						player.seek(to: .zero)
+						player.pause()
 						firstFullscreen = false
 					 }
           
@@ -210,33 +224,37 @@ struct VideoPlayerPost: View, Equatable {
 //            }
 //          }
           
-          sharedVideo.player.volume = val ? 1.0 : 0.0
+          player.volume = val ? 1.0 : 0.0
         }
         .fullScreenCover(isPresented: $fullscreen) {
-          FullScreenVP(sharedVideo: sharedVideo)
+          FullScreenVP(player: player, size: sharedVideo.size)
         }
       }
     }
   }
   
-  func addObserver() {
+  func addObserver(_ player: AVPlayer) {
     guard let sharedVideo = sharedVideo else { return }
     let center = NotificationCenter.default
-    let item = sharedVideo.player.currentItem
+    let item = player.currentItem
     let reset = resetVideo
     // Store the tokens so they can actually be removed; the bag's deinit is the safety net.
     observerBag.set([
       center.addObserver(forName: .AVPlayerItemDidPlayToEndTime, object: item, queue: nil) { _ in
         Task(priority: .background) {
-          sharedVideo.player.seek(to: .zero)
-          sharedVideo.player.play()
+          player.seek(to: .zero)
+          player.play()
         }
       },
       center.addObserver(forName: .AVPlayerItemFailedToPlayToEndTime, object: item, queue: nil) { _ in
-        Task { @MainActor in reset?(sharedVideo) }
+        Task { @MainActor in
+          reset?(sharedVideo)
+        }
       },
       center.addObserver(forName: .AVPlayerItemPlaybackStalled, object: item, queue: nil) { _ in
-        Task { @MainActor in reset?(sharedVideo) }
+        Task { @MainActor in
+          reset?(sharedVideo)
+        }
       },
     ])
   }
@@ -246,8 +264,42 @@ struct VideoPlayerPost: View, Equatable {
   }
 }
 
+/// A bare AVPlayerLayer-backed view for inline (non-fullscreen) feed/detail video.
+/// SwiftUI's `VideoPlayer` gave no teardown hook, so its decode pipeline (one per AVPlayerLayer)
+/// leaked for every realized cell until iOS's ~16-pipeline limit was hit. This owns the layer
+/// explicitly and releases it in `dismantleUIView`; combined with the `isVisible` gate in
+/// VideoPlayerPost, the number of live decode pipelines stays near the on-screen video count.
+/// The shared cached AVPlayer is left intact for instant resume.
+final class PlayerLayerHostView: UIView {
+  override class var layerClass: AnyClass { AVPlayerLayer.self }
+  var playerLayer: AVPlayerLayer { layer as! AVPlayerLayer }
+}
+
+struct InlinePlayerLayer: UIViewRepresentable {
+  let player: AVPlayer
+  var gravity: AVLayerVideoGravity = .resizeAspectFill
+
+
+  func makeUIView(context: Context) -> PlayerLayerHostView {
+    let view = PlayerLayerHostView()
+    view.playerLayer.player = player
+    view.playerLayer.videoGravity = gravity
+    return view
+  }
+
+  func updateUIView(_ view: PlayerLayerHostView, context: Context) {
+    if view.playerLayer.player !== player { view.playerLayer.player = player }
+    view.playerLayer.videoGravity = gravity
+  }
+
+  static func dismantleUIView(_ view: PlayerLayerHostView, coordinator: ()) {
+    view.playerLayer.player = nil
+  }
+}
+
 struct FullScreenVP: View {
-  var sharedVideo: SharedVideo
+  var player: AVPlayer
+  var size: CGSize
   @Environment(\.dismiss) private var dismiss
   @State private var cancelDrag: Bool?
   @State private var isPinching: Bool = false
@@ -258,9 +310,9 @@ struct FullScreenVP: View {
   @State private var altSize: CGSize = .zero
   var body: some View {
     let interpolate = interpolatorBuilder([0, 100], value: abs(drag.height))
-    VideoPlayer(player: sharedVideo.player)
+    VideoPlayer(player: player)
       .background(
-        sharedVideo.size != .zero
+        size != .zero
         ? nil
         : GeometryReader { geo in
           Color.clear
